@@ -30,7 +30,6 @@ For this application, I chose to use Javascript ES6 along with a variety of libr
 
 # Useful Websites
 
-{Make a list of websites that you found helpful in this project}
 
 - [DynamoDB Docs](https://docs.aws.amazon.com/dynamodb/)
 - [Dynamoose Docs](https://dynamoosejs.com/getting_started/Introduction)
