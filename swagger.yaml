@@ -1,0 +1,549 @@
+openapi: 3.0.0
+info:
+  title: Station Management API
+  description: API for managing weather stations and their data
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:3000
+    description: Development server
+
+paths:
+  /stations:
+    get:
+      tags:
+        - stations
+      summary: Get all stations
+      responses:
+        '200':
+          description: Successfully retrieved all stations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Station'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+
+    post:
+      tags:
+        - stations
+      summary: Create a new station
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Station'
+      responses:
+        '201':
+          description: Station created successfully
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+        '409':
+          description: Station already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConflictError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+
+  /stations/{stationId}:
+    get:
+      tags:
+        - stations
+      summary: Get a station by ID
+      parameters:
+        - name: stationId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully retrieved station
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Station'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+        '404':
+          description: Station not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+
+    put:
+      tags:
+        - stations
+      summary: Update a station
+      parameters:
+        - name: stationId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StationUpdate'
+      responses:
+        '200':
+          description: Station updated successfully
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+        '404':
+          description: Station not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+
+    delete:
+      tags:
+        - stations
+      summary: Delete a station
+      parameters:
+        - name: stationId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Station deleted successfully
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+        '404':
+          description: Station not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+
+  /stationData/{stationId}:
+    get:
+      tags:
+        - station_data
+      summary: Get all data for a station
+      parameters:
+        - name: stationId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully retrieved station_data
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StationData'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+        '404':
+          description: No data found for station
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataNotFoundError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+
+    delete:
+      tags:
+        - station_data
+      summary: Delete all data for a station
+      parameters:
+        - name: stationId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: All station_data deleted successfully
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+        '404':
+          description: No data found for station
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataNotFoundError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+
+  /stationData/{stationId}/{date}:
+    get:
+      tags:
+        - station_data
+      summary: Get station_data by date
+      parameters:
+        - name: stationId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: date
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully retrieved station_data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StationData'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+        '404':
+          description: No data found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataNotFoundError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+
+    post:
+      tags:
+        - station_data
+      summary: Create station_data for a date
+      parameters:
+        - name: stationId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: date
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StationDataUpdate'
+      responses:
+        '201':
+          description: station_data created successfully
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+        '409':
+          description: Data already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataConflictError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+
+    put:
+      tags:
+        - station_data
+      summary: Update station_data for a date
+      parameters:
+        - name: stationId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: date
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StationDataUpdate'
+      responses:
+        '200':
+          description: Station data updated successfully
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+        '404':
+          description: No existing data found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataNotFoundError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+
+    delete:
+      tags:
+        - station_data
+      summary: Delete station data for a date
+      parameters:
+        - name: stationId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: date
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: station data deleted successfully
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+        '404':
+          description: No data found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataNotFoundError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+
+components:
+  schemas:
+    Station:
+      type: object
+      required:
+        - stationId
+        - name
+      properties:
+        stationId:
+          type: string
+          example: 'KBOI'
+        name:
+          type: string
+          example: 'Boise Air Terminal'
+        timeZone:
+          type: string
+          example: 'America/Boise'
+        elevation_m:
+          type: string
+          example: '860'
+        latitude:
+          type: string
+          example: '43.56704'
+        longitude:
+          type: string
+          example: '-116.24053'
+        stateCode:
+          type: string
+          example: 'ID'
+
+    StationUpdate:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          example: 'Boise Air Terminal'
+        timeZone:
+          type: string
+          example: 'America/Boise'
+        elevation_m:
+          type: string
+          example: '860'
+        latitude:
+          type: string
+          example: '43.56704'
+        longitude:
+          type: string
+          example: '-116.24053'
+        stateCode:
+          type: string
+          example: 'ID'
+
+    StationData:
+      type: object
+      required:
+        - stationId
+        - date
+        - time
+        - temperature_f
+      properties:
+        stationId:
+          type: string
+          example: 'KBOI'
+        date:
+          type: string
+          example: '2025-01-25'
+        time:
+          type: string
+          example: '15:00'
+        temperature_f:
+          type: string
+          example: '72.3'
+        wind_speed_kmh:
+          type: string
+          example: '11.96'
+        humidity_percent:
+          type: string
+          example: '55.7'
+
+    StationDataUpdate:
+      type: object
+      required:
+        - time
+        - temperature_f
+      properties:
+        time:
+          type: string
+          example: '15:00'
+        temperature_f:
+          type: string
+          example: '72.3'
+        wind_speed_kmh:
+          type: string
+          example: '11.96'
+        humidity_percent:
+          type: string
+          example: '55.7'
+
+    # Error Schemas
+    BadRequestError:
+      type: object
+      properties:
+        error:
+          type: string
+          example: 'Invalid request parameters or malformed data'
+
+    NotFoundError:
+      type: object
+      properties:
+        error:
+          type: string
+          example: 'Station not found'
+
+    DataNotFoundError:
+      type: object
+      properties:
+        error:
+          type: string
+          example: 'No data found for the specified station or date'
+
+    ConflictError:
+      type: object
+      properties:
+        error:
+          type: string
+          example: 'Station already exists'
+
+    DataConflictError:
+      type: object
+      properties:
+        error:
+          type: string
+          example: 'Data already exists for this station and date'
+
+    InternalServerError:
+      type: object
+      properties:
+        error:
+          type: string
+          example: 'Internal server error occurred'
