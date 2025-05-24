@@ -6,7 +6,7 @@ I created this application to create a central repository of weather information
 
 {Provide a link to your YouTube demonstration. It should be a 4-5 minute demo of the software running, a walkthrough of the code, and a view of the cloud database.}
 
-[Software Demo Video](http://youtube.link.goes.here)
+[Idaho Weather Station API](https://www.youtube.com/watch?v=P_7U-2xXKNs)
 
 # Cloud Database
 
